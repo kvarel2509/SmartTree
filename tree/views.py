@@ -1,6 +1,6 @@
 from django.views import generic
 from django.urls import reverse_lazy
-from .models import Dialog, Phrase, Reaction, DynamicField
+from .models import Dialog, Reaction, DynamicField
 
 
 class DefaultDialog(generic.RedirectView):
