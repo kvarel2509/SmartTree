@@ -63,6 +63,18 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-debug-toolbar"
+version = "3.7.0"
+description = "A configurable set of panels that display various debug information about the current request/response."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+Django = ">=3.2.4"
+sqlparse = ">=0.2.0"
+
+[[package]]
 name = "django-environ"
 version = "0.9.0"
 description = "A package that allows you to utilize 12factor inspired environment variables to configure your Django application."
@@ -74,6 +86,14 @@ python-versions = ">=3.4,<4"
 testing = ["pytest (>=4.6.11)", "coverage[toml] (>=5.0a4)"]
 docs = ["sphinx-notfound-page", "sphinx (>=3.5.0)", "furo (>=2021.8.17b43,<2021.9.0)"]
 develop = ["sphinx-notfound-page", "sphinx (>=3.5.0)", "furo (>=2021.8.17b43,<2021.9.0)", "pytest (>=4.6.11)", "coverage[toml] (>=5.0a4)"]
+
+[[package]]
+name = "django-tinymce"
+version = "3.5.0"
+description = "A Django application that contains a widget to render a form field as a TinyMCE editor."
+category = "main"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "flake8"
@@ -250,7 +270,7 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "700b121d15e4d3bf1f357759bde0dd9445f183ac22f66f67962e99847bcde8ef"
+content-hash = "3069119f72ddb0bf1549077f50de13cdc91680583634327eb5f8c66d6819dda4"
 
 [metadata.files]
 asgiref = []
@@ -258,7 +278,9 @@ attrs = []
 colorama = []
 coverage = []
 django = []
+django-debug-toolbar = []
 django-environ = []
+django-tinymce = []
 flake8 = []
 iniconfig = []
 mccabe = []
