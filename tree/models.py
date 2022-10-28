@@ -90,6 +90,8 @@ class DynamicField(models.Model):
 	label = models.SlugField('Метка в тексте', max_length=50)
 	name = models.CharField('Обозначение', max_length=50)
 	default_value = models.CharField('Значение по умолчанию', max_length=50, default='Unknown')
+	changeable = models.BooleanField('Разное значение для каждого разговора', default=True)
+	position = models.IntegerField('Позиция на странице', default=999)
 
 	def __str__(self):
 		return self.name

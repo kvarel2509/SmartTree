@@ -31,6 +31,6 @@ class DialogView(generic.TemplateView):
 			for phrase, reactions in dialog_data.items()
 		]
 
-		ctx['dynamic_fields'] = DynamicField.objects.all()
+		ctx['dynamic_fields'] = DynamicField.objects.all().order_by('position')
 		ctx['dialog'] = dialog
 		return ctx

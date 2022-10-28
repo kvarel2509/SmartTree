@@ -13,7 +13,7 @@
 			{% for dynamic_field in dynamic_fields %}
 				<label class="dynamic-field__label" for="{{ dynamic_field.label }}">{{ dynamic_field.name }}</label>
 				<input
-					class="dynamic-field__input"
+					class="dynamic-field__input{% if dynamic_field.changeable %} changeable{% endif %}"
 					id="{{ dynamic_field.label }}"
 					type="text"
 					placeholder="{{ dynamic_field.default_value }}"
@@ -53,6 +53,10 @@
 					{% endfor %}
 				</div>
 			{% endfor %}
+			<hr>
+		</div>
+		<div class="iframe">
+			<iframe src="https://ru.wikipedia.org/wiki/Hello,_world!" title="Встроенное содержимое"></iframe>
 		</div>
 	</div>
 {% endblock %}

@@ -216,7 +216,10 @@ function copyDynamicFieldValue(id) {
 function startAgainScript() {
 	if (confirm('Будет начат новый диалог и сброшены значения динамичных полей')) {
 		dialogStage.startAgain()
-		document.querySelectorAll('.dynamic-field__input').forEach(e => e.value = '')
+		document.querySelectorAll('.dynamic-field__input.changeable').forEach(e => {
+			e.value = ''
+			document.querySelectorAll(`span.${e.id}`).forEach(e => e.innerHTML = '')
+		})
 	}
 }
 
