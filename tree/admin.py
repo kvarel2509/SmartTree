@@ -53,5 +53,5 @@ class PhraseAdmin(admin.ModelAdmin):
 
 @admin.register(DynamicField)
 class DynamicFieldAdmin(admin.ModelAdmin):
-	list_display = ('name', 'label')
+	list_display = ('name', 'label', 'default_value')
 	search_fields = ('name',)

@@ -42,6 +42,7 @@
 }
 .dynamic-field__input-required {
 	background: #ff5d5d;
+	border: 2px solid black;
 }
 
 
