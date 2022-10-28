@@ -1,0 +1,110 @@
+.content {
+	display: flex;
+	align-items: start;
+}
+.dynamic-fields {
+	flex-grow: 1;
+	display: grid;
+	grid-template-columns: max-content 1fr 0.5fr;
+	gap: 10px;
+	margin: 5rem 10px;
+}
+.btn {
+	cursor: pointer;
+	user-select: none;
+	display: grid;
+	align-items: center;
+	justify-items: center;
+	text-align: center;
+}
+.btn-copy {
+	border: 1px solid #d3d3d3;
+	border-radius: 10px;
+	background: linear-gradient(0, #f3f3f3, #d9d9d9);
+	color: #8f8f8f;
+	opacity: 0.8;
+}
+.btn-copy:hover {
+	opacity: 1;
+	color: #656565;
+}
+.btn-copy:active {
+	background: linear-gradient(0, #c4c4c4, #c0c0c0);
+}
+.dynamic-field__input {
+	border-radius: 3px;
+	border: 1px solid grey;
+	height: 20px;
+}
+
+.dynamic-field__input:focus {
+	background: #fff3f3;
+}
+.dynamic-field__input-required {
+	background: #ff5d5d;
+}
+
+
+.dialog {
+	margin: 15px;
+	flex-grow: 5;
+}
+.dialog__stage {
+	display: none;
+}
+.active {
+	display: grid;
+	width: 50vw;
+	grid-template-columns: repeat(5, minmax(auto, 1fr));
+}
+.dialog__stage__text {
+	grid-column: 1 / end;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	margin: 0 0 15px 0;
+}
+.btn-reaction, .btn-navigation, .btn-navigation__disabled {
+	margin: 15px 5px;
+	border: 1px solid goldenrod;
+	border-radius: 5px;
+	color: #000000;
+	text-shadow: 0 0 7px #ffa42c;
+	height: 50px;
+	background: linear-gradient(0, #ffcb86, #ffe08b);
+}
+.btn-reaction:hover {
+	box-shadow: 0 3px 5px #ffebb1;
+	background: linear-gradient(0, #ffb861, #ffd251)
+}
+.btn-reaction:active {
+	background: linear-gradient(0, #ff9f2a, #ffbf11)
+}
+.navigation-menu {
+	display: flex;
+
+}
+.btn-navigation {
+	width: 150px;
+	height: 30px;
+	border: 1px solid #4ea7ff;
+	text-shadow: 0 0 7px #2cffed;
+	background: linear-gradient(0, #b7f9ff, #9deaff);
+}
+.btn-navigation:hover {
+	box-shadow: 0 3px 5px #d1dfff;
+	background: linear-gradient(0, #61e2ff, #51dfff)
+}
+.btn-navigation:active {
+	background: linear-gradient(0, #2a4dff, #1149ff)
+}
+hr {
+	border: 1px solid #eeeeee;
+}
+.btn-navigation__disabled {
+	width: 150px;
+	height: 30px;
+	border: 1px solid #4ea7ff;
+	text-shadow: 0 0 7px #2cffed;
+	background: linear-gradient(0, #b7f9ff, #9deaff);
+	opacity: 0.5;
+	cursor: not-allowed;
+}
