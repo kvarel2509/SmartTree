@@ -3,7 +3,7 @@ from re import split, fullmatch, search
 from django.core.exceptions import ValidationError
 from tinymce.models import HTMLField
 
-from tree.src.constants import BilletType
+from tree.src.constants import BILLET_TYPES
 
 
 class Dialog(models.Model):
@@ -34,9 +34,6 @@ class Phrase(models.Model):
 	billet = models.JSONField('Заготовка', blank=True, null=True)
 	initial = models.BooleanField('Начальная фраза', default=False)
 	dialog = models.ForeignKey(Dialog, on_delete=models.CASCADE, verbose_name='Диалог')
-	requests_fill = models.ManyToManyField(
-		'DynamicField', blank=True, verbose_name='Запрос на заполнение динамичного поля'
-	)
 
 	def clean(self):
 		self._check_for_single_initial_phrase()
@@ -50,16 +47,25 @@ class Phrase(models.Model):
 			raise ValidationError('Диалог может содержать тольку одну начальную фразу')
 
 	def _get_billet(self):
-		pattern_split = r'(\${.+?})'
-		pattern_execute = r'\${(.+)}'
-		data = split(pattern_split, self.text)
+		split_pattern = r'(\${.+?})'
+		parse_pattern = r'\${(.+?):(.+?)}'
+		data = split(split_pattern, self.text)
+		billet = []
 
-		return [
-			{'type': BilletType.DYNAMIC_FIELD, 'text': search(pattern_execute, item).group(1)}
-			if fullmatch(pattern_split, item) else
-			{'type': BilletType.TEXT, 'text': item}
-			for item in data
-		]
+		for item in data:
+			parse_item = search(parse_pattern, item)
+			
+			if parse_item:
+				billet_item_type = BILLET_TYPES.get(parse_item.group(1))
+				
+				if not billet_item_type:
+					raise ValidationError(f'Типа {parse_item.group(1)} не существует')
+
+				billet.append({'type': billet_item_type, 'value': parse_item.group(2)})
+			else:
+				billet.append({'type': 'text', 'value': item})
+
+		return billet
 
 	def __str__(self):
 		return f'Phrase {self.pk} / {self.title}'

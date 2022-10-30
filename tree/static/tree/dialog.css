@@ -111,6 +111,15 @@ hr {
 	opacity: 0.5;
 	cursor: not-allowed;
 }
+input.billet-item {
+	border: none;
+}
+input.billet-item:valid {
+	border-bottom: 1px solid grey;
+}
+input.billet-item:invalid {
+	border-bottom: 1px solid red;
+}
 .iframe {
 	grid-column: 2;
 	grid-row: 1 / end;
