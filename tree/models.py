@@ -1,5 +1,5 @@
 from django.db import models
-from re import split, fullmatch, search
+from re import split, search
 from django.core.exceptions import ValidationError
 from tinymce.models import HTMLField
 
