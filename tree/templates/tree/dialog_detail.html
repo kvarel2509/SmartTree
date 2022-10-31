@@ -13,8 +13,9 @@
 			{% for dynamic_field in dynamic_fields %}
 				<label class="dynamic-field__label" for="{{ dynamic_field.label }}">{{ dynamic_field.name }}</label>
 				<input
-					class="dynamic-field__input"
-					id="{{ dynamic_field.label }}"
+					class="dynamic-field__input{% if dynamic_field.changeable %} changeable{% endif %}"
+					data-type="input"
+					data-target="{{ dynamic_field.label }}"
 					type="text"
 					placeholder="{{ dynamic_field.default_value }}"
 				>
@@ -36,9 +37,11 @@
 					<div class="dialog__stage__text">
 						{% for billet_item in dialog_stage.phrase.billet %}
 							{% if billet_item.type == 'text' %}
-								{{ billet_item.text | safe }}
-							{% elif billet_item.type == 'dynamic_field' %}
-								<span class="billet-item {{ billet_item.text }}"></span>
+								{{ billet_item.value | safe }}
+							{% elif billet_item.type == 'dynamic_text' %}
+								<span class="billet-item" data-type="{{ billet_item.type }}" data-target="{{ billet_item.value }}"></span>
+							{% elif billet_item.type == 'input' %}
+								<input class="billet-item" data-type="{{ billet_item.type }}" data-target="{{ billet_item.value }}" required>
 							{% endif %}
 						{% endfor %}
 					</div>
@@ -53,6 +56,10 @@
 					{% endfor %}
 				</div>
 			{% endfor %}
+			<hr>
+		</div>
+		<div class="iframe">
+			<iframe src="https://ru.wikipedia.org/wiki/Hello,_world!" title="Встроенное содержимое"></iframe>
 		</div>
 	</div>
 {% endblock %}

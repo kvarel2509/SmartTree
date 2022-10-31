@@ -20,13 +20,12 @@ class SingleInitialPhraseInlineFormSet(BaseInlineFormSet):
 			raise ValidationError('Диалог должен содержать начальную фразу')
 
 
-class PhraseInline(admin.TabularInline):
+class PhraseInline(admin.StackedInline):
 	model = Phrase
 	verbose_name = 'Фраза'
 	verbose_name_plural = 'Фразы'
 	formset = SingleInitialPhraseInlineFormSet
-	fields = ('title', 'text', 'requests_fill', 'initial')
-	autocomplete_fields = ('requests_fill', )
+	fields = ('title', 'text', 'initial')
 
 
 class ReactionInline(admin.TabularInline):
@@ -45,13 +44,13 @@ class DialogAdmin(admin.ModelAdmin):
 
 @admin.register(Phrase)
 class PhraseAdmin(admin.ModelAdmin):
-	fields = ('title', 'text', 'requests_fill', 'initial', 'dialog')
+	fields = ('title', 'text', 'initial', 'dialog')
 	list_display = ('title', 'initial', 'dialog')
 	inlines = (ReactionInline, )
-	autocomplete_fields = ('requests_fill',)
 
 
 @admin.register(DynamicField)
 class DynamicFieldAdmin(admin.ModelAdmin):
-	list_display = ('name', 'label', 'default_value')
+	list_display = ('name', 'label', 'default_value', 'changeable', 'position')
+	list_editable = ('label', 'default_value', 'changeable', 'position')
 	search_fields = ('name',)

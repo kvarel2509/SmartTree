@@ -194,8 +194,11 @@ TINYMCE_DEFAULT_CONFIG = {
 	"height": 500,
 	"menubar": False,
 	"plugins": "advlist,autolink,lists,link,charmap,anchor,searchreplace,visualblocks,insertdatetime,table,paste,template",
-	"toolbar": "undo redo | formatselect fontsizeselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent table | removeformat template",
+	"toolbar": "undo redo | formatselect fontsizeselect | bold italic backcolor forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent table | removeformat template",
 	"statusbar": False,
-	"templates": [{"title": 'Dynamic Field', "description": "Вставить динамичное переменную", "content": '${}'}]
+	"templates": [
+		{"title": 'Dynamic Field', "description": "Вставить динамичное переменную", "content": '${d:}'},
+		{"title": 'Input Field', "description": "Вставить поле для ввода текста", "content": '${i:}'},
+	]
 }
 

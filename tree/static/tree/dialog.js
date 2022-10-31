@@ -3,6 +3,7 @@ class DialogStage {
 	activeStage
 	prevStage
 	observers = []
+	validator = new ChangeStageValidator(this)
 
 	constructor() {
 		this.activeStage = this.getActiveStage()
@@ -13,9 +14,6 @@ class DialogStage {
 
 	addObservers() {
 		this.observers.push(new StepAgainButtonStyleController(document.querySelector('#step-back'), this))
-		document.querySelectorAll('.dynamic-field__input').forEach(e => {
-			this.observers.push(new DynamicFieldInputStyleController(e, this))
-		})
 	}
 
 	getActiveStage() {
@@ -23,6 +21,11 @@ class DialogStage {
 	}
 
 	setActiveStage(stage) {
+		if (!this.validator.validate()) {
+			alert('Необходимо заполнить все поля для ввода текста')
+			return
+		}
+
 		let newActiveStage = stage
 		if (newActiveStage === this.activeStage) return
 		if (this.activeStage) this.activeStage.classList.remove('active')
@@ -55,6 +58,28 @@ class DialogStage {
 	}
 }
 
+
+class ChangeStageValidator {
+	constructor(controller) {
+		this.controller = controller
+	}
+
+	validate() {
+		let flag = true
+		flag = this.check_input_fields_filled() && flag
+		return flag
+	}
+
+	check_input_fields_filled() {
+		let fields = this.controller.activeStage.querySelectorAll('input.billet-item')
+		for (let field of fields) {
+			if (field.value.length === 0) {
+				return false
+			}
+		}
+		return true
+	}
+}
 
 // ------------------------------------------------------------------------------------------
 // Базовый класс для управлением состояниями
@@ -138,75 +163,9 @@ class StepAgainButtonDisabledState extends BaseState {
 }
 
 
-class DynamicFieldInputStyleController extends BaseStyleController{
-	requiredState = new DynamicFieldInputRequiredState(this)
-	normalState = new DynamicFieldInputNormalState(this)
-
-	constructor(slave, lead=null) {
-		super();
-		this.slave = slave
-		this.lead = lead
-		this.setState()
-	}
-
-	setState() {
-		super.setState()
-		if (!this.state) {
-			this.state = (this.lead.activeStage.dataset.requestFill.includes(this.slave.id)) ? this.requiredState : this.normalState
-		}
-		else if (this.state === this.requiredState) this.state = this.normalState
-		else this.state = this.requiredState
-		this.state.activateState()
-	}
-}
-
-
-class DynamicFieldInputRequiredState extends BaseState{
-	controller
-	classes = ['dynamic-field__input-required']
-
-	constructor(controller) {
-		super();
-		this.controller = controller
-	}
-
-	update() {
-		if (!this.controller.lead.activeStage.dataset.requestFill.includes(this.controller.slave.id) && this.controller.state === this) {
-			this.classes.forEach(e => this.controller.slave.classList.remove(e))
-			this.controller.setState()
-		}
-	}
-
-	activateState() {
-		this.classes.forEach(e => this.controller.slave.classList.add(e))
-	}
-}
-
-
-class DynamicFieldInputNormalState extends BaseState {
-	controller
-	classes = []
-
-	constructor(controller) {
-		super();
-		this.controller = controller
-	}
-
-	update() {
-		if (this.controller.lead.activeStage.dataset.requestFill.includes(this.controller.slave.id) && this.controller.state === this) {
-			this.classes.forEach(e => this.controller.slave.classList.remove(e))
-			this.controller.setState()
-		}
-	}
-
-	activateState() {
-		this.classes.forEach(e => this.controller.slave.classList.add(e))
-	}
-}
-
-
 function setDynamicValue(event) {
-	document.querySelectorAll(`span.${event.target.id}`).forEach(e => e.innerHTML = event.target.value)
+	document.querySelectorAll(`span[data-target=${event.target.dataset.target}]`).forEach(e => e.innerHTML = event.target.value)
+	document.querySelectorAll(`input[data-target=${event.target.dataset.target}]`).forEach(e => e.value = event.target.value)
 }
 
 function copyDynamicFieldValue(id) {
@@ -216,12 +175,16 @@ function copyDynamicFieldValue(id) {
 function startAgainScript() {
 	if (confirm('Будет начат новый диалог и сброшены значения динамичных полей')) {
 		dialogStage.startAgain()
-		document.querySelectorAll('.dynamic-field__input').forEach(e => e.value = '')
+		document.querySelectorAll('.dynamic-field__input.changeable').forEach(e => {
+			e.value = ''
+			document.querySelectorAll(`span.billet-item[data-target=${e.dataset.target}]`).forEach(e => e.innerHTML = '')
+			document.querySelectorAll(`input.billet-item[data-target=${e.dataset.target}`).forEach(e => e.value = '')
+		})
 	}
 }
 
 let dialogStage
 document.addEventListener('DOMContentLoaded', () => {
 	dialogStage = new DialogStage()
-	document.querySelectorAll('.dynamic-field__input').forEach(e => e.addEventListener('keyup', setDynamicValue))
+	document.querySelectorAll(`input[data-target]`).forEach(e => e.addEventListener('keyup', setDynamicValue))
 })

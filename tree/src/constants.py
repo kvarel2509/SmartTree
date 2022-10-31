@@ -1,7 +1,10 @@
-from dataclasses import dataclass
+from typing import Dict
 
 
-@dataclass
-class BilletType:
-	TEXT = 'text'
-	DYNAMIC_FIELD = 'dynamic_field'
+prefix = str
+billet_type = str
+
+BILLET_TYPES: Dict[prefix, billet_type] = {
+	'd': 'dynamic_text',
+	'i': 'input',
+}

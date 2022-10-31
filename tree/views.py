@@ -25,12 +25,8 @@ class DialogView(generic.TemplateView):
 			)
 			dialog_data.setdefault(reaction.to_phrase, list())
 
-		dialog = [
-			{'phrase': phrase, 'reactions': reactions, 'requests_fill': phrase.requests_fill.all()}
-			# TODO запрос перестает быть оптимальным в этом месте
-			for phrase, reactions in dialog_data.items()
-		]
+		dialog = [{'phrase': phrase, 'reactions': reactions} for phrase, reactions in dialog_data.items()]
 
-		ctx['dynamic_fields'] = DynamicField.objects.all()
+		ctx['dynamic_fields'] = DynamicField.objects.all().order_by('position')
 		ctx['dialog'] = dialog
 		return ctx
