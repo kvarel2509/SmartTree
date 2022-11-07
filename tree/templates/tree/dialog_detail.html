@@ -18,14 +18,15 @@
 					data-target="{{ dynamic_field.label }}"
 					type="text"
 					placeholder="{{ dynamic_field.default_value }}"
+					onkeyup="Dialog.dynamicFieldsController.setValue(this.dataset.target, this.value)"
 				>
-				<div class="dynamic-field__btn btn btn-copy" onclick=copyDynamicFieldValue('{{ dynamic_field.label }}')>copy</div>
+				<div class="dynamic-field__btn btn btn-copy" onclick="Dialog.dynamicFieldsController.copyDynamicFieldValue('{{ dynamic_field.label }}')">copy</div>
 			{% endfor %}
 		</div>
 		<div class="dialog">
 			<div class="navigation-menu">
-				<div class="navigation-menu__item btn" id='step-back' onclick=dialogStage.stepBack()>Шаг назад</div>
-				<div class="navigation-menu__item btn btn-navigation" id="start-again" onclick="startAgainScript()">Начать заново</div>
+				<div class="navigation-menu__item btn" id='step-back' onclick="Dialog.dialogStageController.stepBack()">Шаг назад</div>
+				<div class="navigation-menu__item btn btn-navigation" id="start-again" onclick="Dialog.dialogStageController.startAgain(); Dialog.dynamicFieldsController.reset()">Начать заново</div>
 			</div>
 			<hr>
 			{% for dialog_stage in dialog %}
@@ -41,7 +42,7 @@
 							{% elif billet_item.type == 'dynamic_text' %}
 								<span class="billet-item" data-type="{{ billet_item.type }}" data-target="{{ billet_item.value }}"></span>
 							{% elif billet_item.type == 'input' %}
-								<input class="billet-item" data-type="{{ billet_item.type }}" data-target="{{ billet_item.value }}" required>
+								<input class="billet-item" data-type="{{ billet_item.type }}" data-target="{{ billet_item.value }}" required onkeyup="Dialog.dynamicFieldsController.setValue(this.dataset.target, this.value)">
 							{% endif %}
 						{% endfor %}
 					</div>
@@ -49,7 +50,7 @@
 					{% for reaction in dialog_stage.reactions %}
 						<div
 							class="dialog__stage__reaction btn btn-reaction"
-							onclick="dialogStage.setActiveStage(document.querySelector('#dialog-stage-{{ reaction.to_phrase.id }}'))"
+							onclick="Dialog.dialogStageController.setActiveStage(document.querySelector('#dialog-stage-{{ reaction.to_phrase.id }}'))"
 						>
 						{{ reaction.reaction.title }}
 						</div>
