@@ -2,12 +2,12 @@ class Subject {
 	observers = []
 
 	addObserver(observer) {
-        this.observers.push(observer)
-    }
+		this.observers.push(observer)
+	}
 
-    notifyObservers() {
-        this.observers.forEach(e => e.update())
-    }
+	notifyObservers() {
+		this.observers.forEach(e => e.update())
+	}
 }
 
 
@@ -26,34 +26,34 @@ class Observer {
 
 
 class DialogStageModel extends Subject {
-    startStage
-    activeStage
-    prevStage
+	startStage
+	activeStage
+	prevStage
 
-    constructor(stage) {
+	constructor(stage) {
 		super()
-        this.startStage = stage
-        this.activeStage = stage
-        this.prevStage = null
-    }
+		this.startStage = stage
+		this.activeStage = stage
+		this.prevStage = null
+	}
 
-    setActiveStage(stage) {
-        this.prevStage = this.activeStage
-        this.activeStage = stage
-        this.notifyObservers()
-    }
+	setActiveStage(stage) {
+		this.prevStage = this.activeStage
+		this.activeStage = stage
+		this.notifyObservers()
+	}
 
-    startAgain() {
-        this.activeStage = this.startStage
-        this.prevStage = null
-        this.notifyObservers()
-    }
+	startAgain() {
+		this.activeStage = this.startStage
+		this.prevStage = null
+		this.notifyObservers()
+	}
 
-    stepBack() {
-        this.activeStage = this.prevStage
-        this.prevStage = null
-        this.notifyObservers()
-    }
+	stepBack() {
+		this.activeStage = this.prevStage
+		this.prevStage = null
+		this.notifyObservers()
+	}
 }
 
 
@@ -138,6 +138,7 @@ class StepBackButtonActiveState {
 	}
 }
 
+
 class StepBackButtonDisabledState {
 	controller
 	classes = ['btn-navigation__disabled']
@@ -167,7 +168,7 @@ class DynamicFieldsController {
 		this.groups.set(label, model)
 		return model
 	}
-	
+
 	setValue(label, value) {
 		if (!this.groups.has(label)) return
 		this.groups.get(label).setValue(value)
@@ -178,13 +179,13 @@ class DynamicFieldsController {
 	}
 
 	copyDynamicFieldValue(label) {
-        navigator.clipboard.writeText(this.groups.get(label).value).then(() => {})
-    }
+		navigator.clipboard.writeText(this.groups.get(label).value).then(() => {})
+	}
 }
 
 
 class DialogStageController {
-    validator
+	validator
 	dialogStageModel
 
 	constructor(dialogStageModel) {
@@ -192,34 +193,32 @@ class DialogStageController {
 		this.validator = new ChangeStageValidator(this.dialogStageModel)
 	}
 
-    setActiveStage(stage) {
-        if (this.dialogStageModel.activeStage === stage) return 
-		
-        if (!this.validator.validate(this.dialogStageModel.activeStage)) {
+	setActiveStage(stage) {
+		if (this.dialogStageModel.activeStage === stage) return
+
+		if (!this.validator.validate(this.dialogStageModel.activeStage)) {
 			alert('Необходимо заполнить все поля для ввода текста')
 			return
 		}
-		
-        this.dialogStageModel.activeStage.classList.remove('active')
-        this.dialogStageModel.setActiveStage(stage)
-        this.dialogStageModel.activeStage.classList.add('active')
-    }
 
-    startAgain() {
-        if (!confirm('Будет начат новый диалог и сброшены значения динамичных полей')) return
-        
-        this.dialogStageModel.activeStage.classList.remove('active')
-        this.dialogStageModel.startAgain()
-        this.dialogStageModel.activeStage.classList.add('active')
-    }
+		this.dialogStageModel.activeStage.classList.remove('active')
+		this.dialogStageModel.setActiveStage(stage)
+		this.dialogStageModel.activeStage.classList.add('active')
+	}
 
-    stepBack() {
-        if (!this.dialogStageModel.prevStage) return
-        this.dialogStageModel.activeStage.classList.remove('active')
-        this.dialogStageModel.stepBack()
-        this.dialogStageModel.activeStage.classList.add('active')
-    }
-	
+	startAgain() {
+		if (!confirm('Будет начат новый диалог и сброшены значения динамичных полей')) return
+		this.dialogStageModel.activeStage.classList.remove('active')
+		this.dialogStageModel.startAgain()
+		this.dialogStageModel.activeStage.classList.add('active')
+	}
+
+	stepBack() {
+		if (!this.dialogStageModel.prevStage) return
+		this.dialogStageModel.activeStage.classList.remove('active')
+		this.dialogStageModel.stepBack()
+		this.dialogStageModel.activeStage.classList.add('active')
+	}
 }
 
 
@@ -238,11 +237,13 @@ class ChangeStageValidator {
 
 	check_input_fields_filled() {
 		let fields = this.model.activeStage.querySelectorAll('input.billet-item')
+
 		for (let field of fields) {
 			if (field.value.length === 0) {
 				return false
 			}
 		}
+
 		return true
 	}
 }
