@@ -33,6 +33,7 @@ class Phrase(models.Model):
 	text = HTMLField('Текст')
 	billet = models.JSONField('Заготовка', blank=True, null=True)
 	initial = models.BooleanField('Начальная фраза', default=False)
+	timer = models.DurationField('Таймер')
 	dialog = models.ForeignKey(Dialog, on_delete=models.CASCADE, verbose_name='Диалог')
 
 	def clean(self):
