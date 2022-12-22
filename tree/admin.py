@@ -25,7 +25,7 @@ class PhraseInline(admin.StackedInline):
 	verbose_name = 'Фраза'
 	verbose_name_plural = 'Фразы'
 	formset = SingleInitialPhraseInlineFormSet
-	fields = ('title', 'text', 'timer', 'initial')
+	fields = ('title', 'text', 'timer', 'initial', 'shortcut')
 
 
 class ReactionInline(admin.TabularInline):
@@ -44,8 +44,8 @@ class DialogAdmin(admin.ModelAdmin):
 
 @admin.register(Phrase)
 class PhraseAdmin(admin.ModelAdmin):
-	fields = ('title', 'text', 'timer', 'initial', 'dialog')
-	list_display = ('title', 'timer', 'initial', 'dialog')
+	fields = ('title', 'text', 'timer', 'initial', 'dialog', 'shortcut')
+	list_display = ('title', 'timer', 'initial', 'dialog', 'shortcut')
 	inlines = (ReactionInline, )
 
 

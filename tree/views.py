@@ -1,6 +1,7 @@
+from .models import Dialog, DynamicField
+
 from django.views import generic
 from django.urls import reverse_lazy
-from .models import Dialog, Reaction, DynamicField
 
 
 class DefaultDialog(generic.RedirectView):
@@ -8,24 +9,23 @@ class DefaultDialog(generic.RedirectView):
 	url = reverse_lazy('dialog_detail', kwargs={'slug': default_dialog_slug})
 
 
-class DialogView(generic.TemplateView):
+class DialogView(generic.DetailView):
 	model = Dialog
 	template_name = 'tree/dialog_detail.html'
 
 	def get_context_data(self, **kwargs):
 		ctx = super().get_context_data(**kwargs)
-		reactions = Reaction.objects.filter(
-			from_phrase__dialog__slug=self.kwargs.get('slug')
-		).select_related('from_phrase', 'to_phrase')
-		dialog_data = {}
+		phrases = self.object.get_dialog_data()
 
-		for reaction in reactions:
-			dialog_data.setdefault(reaction.from_phrase, list()).append(
-				{'reaction': reaction, 'to_phrase': reaction.to_phrase}
-			)
-			dialog_data.setdefault(reaction.to_phrase, list())
-
-		dialog = [{'phrase': phrase, 'reactions': reactions} for phrase, reactions in dialog_data.items()]
+		dialog = [
+			{
+				'phrase': phrase,
+				'reactions': [
+					{'reaction': reaction, 'to_phrase': reaction.to_phrase} for reaction in phrase.from_phrase_set.all()
+				]
+			}
+			for phrase in phrases
+		]
 
 		ctx['dynamic_fields'] = DynamicField.objects.all().order_by('position')
 		ctx['dialog'] = dialog

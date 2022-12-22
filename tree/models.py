@@ -1,9 +1,9 @@
+from tree.src.constants import BILLET_TYPES
+
 from django.db import models
 from re import split, search
 from django.core.exceptions import ValidationError
 from tinymce.models import HTMLField
-
-from tree.src.constants import BILLET_TYPES
 
 
 class Dialog(models.Model):
@@ -17,6 +17,11 @@ class Dialog(models.Model):
 	class Meta:
 		verbose_name = 'Диалог'
 		verbose_name_plural = 'Диалоги'
+
+	def get_dialog_data(self):
+		return self.phrase_set.all().prefetch_related(
+			models.Prefetch('from_phrase_set', queryset=Reaction.objects.select_related('to_phrase__dialog'))
+		)
 
 
 class PhraseManager(models.Manager):
@@ -33,8 +38,10 @@ class Phrase(models.Model):
 	text = HTMLField('Текст')
 	billet = models.JSONField('Заготовка', blank=True, null=True)
 	initial = models.BooleanField('Начальная фраза', default=False)
-	timer = models.DurationField('Таймер')
+	timer = models.DurationField('Таймер', default='00:00:00')
 	dialog = models.ForeignKey(Dialog, on_delete=models.CASCADE, verbose_name='Диалог')
+	actions = models.ManyToManyField('self', symmetrical=False, through='Reaction', verbose_name='Связанные действия')
+	shortcut = models.BooleanField('Быстрый доступ', default=False)
 
 	def clean(self):
 		self._check_for_single_initial_phrase()

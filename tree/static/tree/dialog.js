@@ -324,10 +324,14 @@ class DialogStageController {
 		this.setActiveStage(startStage)
 	}
 
-	setActiveStage(stage) {
+	setActiveStage(stage, unconditionalAction=false) {
 		if (this.dialogStageModel.activeStage === stage) return
 
-		if (this.dialogStageModel.activeStage && !this.validator.validate(this.dialogStageModel.activeStage)) {
+		if (
+			this.dialogStageModel.activeStage &&
+			!this.validator.validate(this.dialogStageModel.activeStage) &&
+			!unconditionalAction
+		) {
 			alert('Необходимо заполнить все поля для ввода текста')
 			return
 		}

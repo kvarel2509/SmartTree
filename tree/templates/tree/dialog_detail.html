@@ -8,58 +8,77 @@
 {% endblock %}
 
 {% block body %}
-{#	{{ dialog }}#}
 	<div class="content">
-		<div class="dynamic-fields">
-			{% for dynamic_field in dynamic_fields %}
-				<label class="dynamic-field__label" for="{{ dynamic_field.label }}">{{ dynamic_field.name }}</label>
-				<input
-					class="dynamic-field__input{% if dynamic_field.changeable %} changeable{% endif %}"
-					data-type="input"
-					data-target="{{ dynamic_field.label }}"
-					type="text"
-					placeholder="{{ dynamic_field.default_value }}"
-					onkeyup="Dialog.dynamicFieldsController.setValue(this.dataset.target, this.value)"
-				>
-				<div class="dynamic-field__btn btn btn-copy" onclick="Dialog.dynamicFieldsController.copyDynamicFieldValue('{{ dynamic_field.label }}')">copy</div>
-			{% endfor %}
-		</div>
-		<div class="dialog">
-			<div class="navigation-menu">
-				<div class="navigation-menu__item btn" id='step-back' onclick="Dialog.dialogStageController.stepBack()">Шаг назад</div>
-				<div class="navigation-menu__item btn btn-navigation" id="start-again" onclick="Dialog.dialogStageController.startAgain(); Dialog.dynamicFieldsController.reset()">Начать заново</div>
+		<div class="panel">
+			<div class="navigation">
+				<div class="navigation-menu">
+					<div class="navigation-menu__item btn" id='step-back' onclick="Dialog.dialogStageController.stepBack()">Шаг назад</div>
+					<div class="navigation-menu__item btn btn-navigation" id="start-again" onclick="Dialog.dialogStageController.startAgain(); Dialog.dynamicFieldsController.reset(); document.querySelector('#notepad').value = ''">Начать заново</div>
+				</div>
 			</div>
-			<hr>
-			{% for dialog_stage in dialog %}
-				<div
-					class="dialog__stage{% if dialog_stage.phrase.initial %} active{% endif %}"
-					id="dialog-stage-{{ dialog_stage.phrase.id }}"
-					data-request-fill="{% for request_fill in dialog_stage.requests_fill %}{{ request_fill.label }} {% endfor %}"
-					data-timer="{{ dialog_stage.phrase.timer|convert_time_to_second }}"
-				>
-					<div class="dialog__stage__text">
-						{% for billet_item in dialog_stage.phrase.billet %}
-							{% if billet_item.type == 'text' %}
-								{{ billet_item.value | safe }}
-							{% elif billet_item.type == 'dynamic_text' %}
-								<span class="billet-item" data-type="{{ billet_item.type }}" data-target="{{ billet_item.value }}"></span>
-							{% elif billet_item.type == 'input' %}
-								<input class="billet-item" data-type="{{ billet_item.type }}" data-target="{{ billet_item.value }}" required onkeyup="Dialog.dynamicFieldsController.setValue(this.dataset.target, this.value)">
-							{% endif %}
+			<div class="dialog">
+				{% for dialog_stage in dialog %}
+					<div
+						class="dialog__stage{% if dialog_stage.phrase.initial %} active{% endif %}"
+						id="dialog-stage-{{ dialog_stage.phrase.id }}"
+						data-request-fill="{% for request_fill in dialog_stage.requests_fill %}{{ request_fill.label }} {% endfor %}"
+						data-timer="{{ dialog_stage.phrase.timer|convert_time_to_second }}"
+					>
+						<div class="dialog__stage__text">
+							{% for billet_item in dialog_stage.phrase.billet %}
+								{% if billet_item.type == 'text' %}
+									{{ billet_item.value | safe }}
+								{% elif billet_item.type == 'dynamic_text' %}
+									<span class="billet-item" data-type="{{ billet_item.type }}" data-target="{{ billet_item.value }}"></span>
+								{% elif billet_item.type == 'input' %}
+									<input class="billet-item" data-type="{{ billet_item.type }}" data-target="{{ billet_item.value }}" required onkeyup="Dialog.dynamicFieldsController.setValue(this.dataset.target, this.value)" autocomplete="off">
+								{% endif %}
+							{% endfor %}
+						</div>
+
+						{% for reaction in dialog_stage.reactions %}
+							<div
+								class="dialog__stage__reaction btn btn-reaction"
+								onclick="Dialog.dialogStageController.setActiveStage(document.querySelector('#dialog-stage-{{ reaction.to_phrase.id }}'))"
+							>
+							{{ reaction.reaction.title }}
+							</div>
 						{% endfor %}
 					</div>
-
-					{% for reaction in dialog_stage.reactions %}
-						<div
-							class="dialog__stage__reaction btn btn-reaction"
-							onclick="Dialog.dialogStageController.setActiveStage(document.querySelector('#dialog-stage-{{ reaction.to_phrase.id }}'))"
+				{% endfor %}
+			</div>
+			<div class="dynamic-fields">
+				<div class="dynamic-fields-table">
+					{% for dynamic_field in dynamic_fields %}
+						<label class="dynamic-field__label" for="{{ dynamic_field.label }}">{{ dynamic_field.name }}</label>
+						<input
+							class="dynamic-field__input{% if dynamic_field.changeable %} changeable{% endif %}"
+							data-type="input"
+							data-target="{{ dynamic_field.label }}"
+							type="text"
+							placeholder="{{ dynamic_field.default_value }}"
+							onkeyup="Dialog.dynamicFieldsController.setValue(this.dataset.target, this.value)"
+							autocomplete="off"
 						>
-						{{ reaction.reaction.title }}
-						</div>
+						<div class="dynamic-field__btn btn btn-copy" onclick="Dialog.dynamicFieldsController.copyDynamicFieldValue('{{ dynamic_field.label }}')">copy</div>
 					{% endfor %}
 				</div>
-			{% endfor %}
-			<hr>
+			</div>
+			<div class="shortcuts">
+				{% for dialog_stage in dialog %}
+					{% if dialog_stage.phrase.shortcut %}
+						<div
+							class="dialog__stage__reaction btn btn-shortcut"
+							onclick="Dialog.dialogStageController.setActiveStage(document.querySelector('#dialog-stage-{{ dialog_stage.phrase.id }}'), unconditionalAction=true)"
+						>
+						{{ dialog_stage.phrase.title }}
+						</div>
+					{% endif %}
+				{% endfor %}
+			</div>
+			<div class="notepad">
+				<textarea id="notepad"></textarea>
+			</div>
 		</div>
 		<div id="timer" onclick="Dialog.timerController.reset()"></div>
 		<div class="iframe">
