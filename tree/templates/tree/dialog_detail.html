@@ -31,7 +31,7 @@
 								{% elif billet_item.type == 'dynamic_text' %}
 									<span class="billet-item" data-type="{{ billet_item.type }}" data-target="{{ billet_item.value }}"></span>
 								{% elif billet_item.type == 'input' %}
-									<input class="billet-item" data-type="{{ billet_item.type }}" data-target="{{ billet_item.value }}" required onkeyup="Dialog.dynamicFieldsController.setValue(this.dataset.target, this.value)" autocomplete="off">
+									<input class="billet-item" data-type="{{ billet_item.type }}" data-target="{{ billet_item.value }}" required onkeyup="Dialog.dynamicFieldsController.setValue(this.dataset.target, this.value)" autocomplete="new-password">
 								{% endif %}
 							{% endfor %}
 						</div>
@@ -58,7 +58,7 @@
 							type="text"
 							placeholder="{{ dynamic_field.default_value }}"
 							onkeyup="Dialog.dynamicFieldsController.setValue(this.dataset.target, this.value)"
-							autocomplete="off"
+							autocomplete="new-password"
 						>
 						<div class="dynamic-field__btn btn btn-copy" onclick="Dialog.dynamicFieldsController.copyDynamicFieldValue('{{ dynamic_field.label }}')">copy</div>
 					{% endfor %}
